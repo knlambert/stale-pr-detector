@@ -6,28 +6,29 @@ import (
 	"testing"
 )
 
-type ClientTestSuite struct {
+type suiteClient struct {
 	suite.Suite
 	client *Client
 }
 
-func (c *ClientTestSuite) SetupTest() {
-	c.client = &Client{}
+func (s *suiteClient) SetupTest() {
+	s.client = &Client{}
 }
 
-func (c *ClientTestSuite) TestParseRepositoryURL() {
+func (s *suiteClient) TestParseRepositoryURL() {
 	for _, url := range []string{
 		"https://github.com/google/go-github.git",
 		"git@github.com:google/go-github.git",
 		"github.com/google/go-github.git",
+		"github.com/google/go-github",
 	} {
-		owner, repo, err := c.client.parseRepositoryURL(url)
-		assert.Equal(c.T(), "google", owner)
-		assert.Equal(c.T(), "go-github", repo)
-		assert.NoErrorf(c.T(), err, "the regex should match")
+		owner, repo, err := s.client.ParseRepositoryURL(url)
+		assert.Equal(s.T(), "google", owner)
+		assert.Equal(s.T(), "go-github", repo)
+		assert.NoErrorf(s.T(), err, "the regex should match")
 	}
 }
 
-func TestClientTestSuite(t *testing.T) {
-	suite.Run(t, new(ClientTestSuite))
+func TestSuiteClient(t *testing.T) {
+	suite.Run(t, new(suiteClient))
 }

@@ -1,32 +1,32 @@
 package pkg
 
 import (
-	"github.com/knlambert/stale-pr-detector/pkg/crawler"
-	"github.com/knlambert/stale-pr-detector/pkg/git"
 	"github.com/pkg/errors"
 )
 
 func CreatePRDetector(
-	gitVendor git.Vendor,
-	crawlerType crawler.Type,
+	gitVendor GitClientVendor,
+	formatType OutputFormat,
 ) (*PRDetector, error) {
-	var gitClient git.Client
-	var crawl crawler.Crawler
+	var gitClient Client
+	var formatter Formatter
 	var err error
 
-	if gitClient, err = git.CreateClient(gitVendor); err != nil {
+	if gitClient, err = CreateGitClient(gitVendor); err != nil {
 		return nil, errors.Wrapf(err, "failed to initialize PR detector")
 	}
 
-	if crawl, err = crawler.CreateCrawler(gitClient, crawlerType); err != nil {
+	if formatter, err = CreateFormatter(formatType); err != nil {
 		return nil, errors.Wrapf(err, "failed to initialize PR detector")
 	}
 
 	return &PRDetector{
-		crawler: crawl,
+		formatter: formatter,
+		gitClient: gitClient,
 	}, nil
 }
 
 type PRDetector struct {
-	crawler crawler.Crawler
+	formatter Formatter
+	gitClient Client
 }

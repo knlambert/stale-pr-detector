@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"github.com/knlambert/stale-pr-detector/pkg"
-	"github.com/knlambert/stale-pr-detector/pkg/crawler"
-	"github.com/knlambert/stale-pr-detector/pkg/git"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -11,28 +9,29 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "prq",
 	Short: "PR Query is a command line designed to look for PRs in popular Git vendors",
-	Args: cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		var err error
-		prDetector, err = pkg.CreatePRDetector(
-			git.Vendor(gitVendor),
-			crawler.Parallel,
-		)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-	},
+	Args:  cobra.MinimumNArgs(1),
 }
 
 var (
 	repositoriesURLs []string
-	gitVendor string
-	prDetector *pkg.PRDetector
+	gitVendor        string
+	formatType       string
 )
 
-func Execute() {
+func createPRDetector() *pkg.PRDetector {
+	prDetector, err := pkg.CreatePRDetector(
+		pkg.GitClientVendor(gitVendor),
+		pkg.OutputFormat(formatType),
+	)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return prDetector
+}
+
+func Execute() {
 
 	rootCmd.PersistentFlags().StringSliceVar(
 		&repositoriesURLs,
@@ -48,7 +47,14 @@ func Execute() {
 		"The vendor to request (only github supported for now)",
 	)
 
-	rootCmd.AddCommand(cmdStale)
+	rootCmd.PersistentFlags().StringVar(
+		&formatType,
+		"format",
+		"json",
+		"The required output format (json|text)",
+	)
+
+	staleInitialize()
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
@@ -58,7 +64,7 @@ func Execute() {
 //
 //func Execute() {
 //	pr, err := pkg.CreatePRDetector(
-//		git.VendorGithub,
+//		git.GitClientVendorGithub,
 //		crawler.Parallel,
 //	)
 //

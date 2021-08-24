@@ -1,31 +1,29 @@
-package git
+package pkg
 
 import (
 	"fmt"
+	"github.com/knlambert/stale-pr-detector/pkg/git"
 	"github.com/knlambert/stale-pr-detector/pkg/git/github"
 	"github.com/knlambert/stale-pr-detector/pkg/models"
 	"github.com/pkg/errors"
-	"time"
 )
 
-type Vendor string
+type GitClientVendor string
 
 const (
-	VendorGithub Vendor = "github"
+	GitClientVendorGithub GitClientVendor = "github"
 )
 
 type Client interface {
 	PullRequestsList(
 		repositoryURL string,
-		lastActivity time.Time,
-	) (
-		[]models.Repository, error,
-	)
+		filters *git.PullRequestsListFilters,
+	) ([]models.PullRequest, error)
 }
 
-func CreateClient(vendor Vendor) (Client, error) {
+func CreateGitClient(vendor GitClientVendor) (Client, error) {
 	switch vendor {
-	case VendorGithub:
+	case GitClientVendorGithub:
 		return github.CreateClient(), nil
 	default:
 		return nil, errors.New(fmt.Sprintf("vendor %s not supported", vendor))
