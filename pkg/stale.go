@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-
 func (p *PRDetector) StaleList(
 	repositories []string,
 	labels []string,
@@ -25,13 +24,13 @@ func (p *PRDetector) StaleList(
 		return err
 	}
 
-	var allPRs []models.PullRequest
+	var allPRs = make([]models.PullRequest, 0)
 
 	for i := range repositories {
 		if prs, err := p.gitClient.PullRequestsList(repositories[i], &git.PullRequestsListFilters{
 			LastActivity: convertedLastActivity,
-			Labels: &labels,
-			States: &states,
+			Labels:       &labels,
+			States:       &states,
 		}); err == nil {
 			allPRs = append(allPRs, prs...)
 		} else {
@@ -39,13 +38,18 @@ func (p *PRDetector) StaleList(
 		}
 	}
 
-	formatted, err := p.formatter.PrettyPrintPullRequests(allPRs)
+	formatted, err := p.formatter.PrettyPrint(&staleOutput{
+		PullRequests: allPRs,
+	})
+
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(string(formatted))
+	if _, err := p.output.Write(formatted); err != nil {
+		return errors.Wrap(err, "failed to output the result")
+	}
 
 	return nil
 }
@@ -65,12 +69,18 @@ func (p *PRDetector) parseLastActivity(lastActivity string) (*time.Time, error) 
 		return nil, err
 	}
 
-	duration := map[string]time.Duration{
-		"d": time.Hour * 24,
-		"m": time.Hour * 24 * 30,
-		"y": time.Hour * 24 * 7 * 365,
+	now := time.Now()
+
+	lastActivityDate := map[string]time.Time{
+		"d": now.AddDate(0, 0, -count),
+		"m": now.AddDate(0, -count, 0),
+		"y": now.AddDate(-count, 0, 0),
 	}[groups[2]]
 
-	lastActivityDate := time.Now().Add(time.Duration(count) * duration)
 	return &lastActivityDate, nil
+}
+
+//staleOutput represents the output of the command.
+type staleOutput struct {
+	PullRequests []models.PullRequest `json:"pull_requests"`
 }

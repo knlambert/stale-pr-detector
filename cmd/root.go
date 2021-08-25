@@ -16,12 +16,14 @@ var (
 	repositoriesURLs []string
 	gitVendor        string
 	formatType       string
+	filePath         string
 )
 
 func createPRDetector() *pkg.PRDetector {
 	prDetector, err := pkg.CreatePRDetector(
 		pkg.GitClientVendor(gitVendor),
 		pkg.OutputFormat(formatType),
+		filePath,
 	)
 
 	if err != nil {
@@ -52,6 +54,14 @@ func Execute() {
 		"format",
 		"json",
 		"The required output format (json|text)",
+	)
+
+	rootCmd.PersistentFlags().StringVarP(
+		&filePath,
+		"file",
+		"f",
+		"",
+		"The file to output the result to",
 	)
 
 	staleInitialize()

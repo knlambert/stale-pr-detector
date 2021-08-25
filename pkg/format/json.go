@@ -2,7 +2,6 @@ package format
 
 import (
 	"encoding/json"
-	"github.com/knlambert/stale-pr-detector/pkg/models"
 	"github.com/pkg/errors"
 )
 
@@ -11,8 +10,8 @@ func CreateJSONFormatter() *JSONFormatter {
 }
 type JSONFormatter struct {}
 
-func (j *JSONFormatter) PrettyPrintPullRequests(prs []models.PullRequest) ([]byte, error) {
-	if encoded, err := json.Marshal(prs); err != nil {
+func (j *JSONFormatter) PrettyPrint(value interface{}) ([]byte, error) {
+	if encoded, err := json.Marshal(value); err != nil {
 		return nil, errors.Wrap(err, "failed to encode to JSON")
 	} else {
 		return encoded, nil

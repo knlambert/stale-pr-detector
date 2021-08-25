@@ -34,8 +34,13 @@ func (c *Client) PullRequestsList(
 		for _, label := range *filters.Labels {
 			labelsFilters = append(labelsFilters, fmt.Sprintf("label:%s", label))
 		}
-
 		queryFilters = append(queryFilters, strings.Join(labelsFilters, " "))
+	}
+
+	if filters.LastActivity != nil {
+		queryFilters = append(
+			queryFilters, fmt.Sprintf("updated:<=%s", filters.LastActivity.Format("2006-01-02")),
+		)
 	}
 
 	query := strings.Join(queryFilters, " ")
@@ -52,7 +57,8 @@ func (c *Client) PullRequestsList(
 }
 
 func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequest {
-	var decoded []models.PullRequest
+
+	var decoded = make([]models.PullRequest, 0)
 	for _, pr := range results {
 		var labels []string
 

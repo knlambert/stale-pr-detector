@@ -3,12 +3,11 @@ package pkg
 import (
 	"fmt"
 	"github.com/knlambert/stale-pr-detector/pkg/format"
-	"github.com/knlambert/stale-pr-detector/pkg/models"
 	"github.com/pkg/errors"
 )
 
 type Formatter interface {
-	PrettyPrintPullRequests(prs []models.PullRequest) ([]byte, error)
+	PrettyPrint(value interface{}) ([]byte, error)
 }
 
 type OutputFormat string

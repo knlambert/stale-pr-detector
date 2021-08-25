@@ -12,7 +12,6 @@ type suitePRDetector struct {
 
 func (s *suitePRDetector) SetupTest() {
 	s.stubbedPRDetector = &PRDetector{
-		crawler:   nil,
 		formatter: nil,
 	}
 }
