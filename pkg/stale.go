@@ -10,13 +10,7 @@ import (
 	"time"
 )
 
-func (p *PRDetector) StaleList(
-	repositories []string,
-	labels []string,
-	lastActivity string,
-	outputFormat OutputFormat,
-) error {
-
+func (p *PRDetector) StaleList(repositories []string, labels []string, lastActivity string) error {
 	convertedLastActivity, err := p.parseLastActivity(lastActivity)
 	states := []string{"open"}
 
@@ -38,10 +32,7 @@ func (p *PRDetector) StaleList(
 		}
 	}
 
-	formatted, err := p.formatter.PrettyPrint(&staleOutput{
-		PullRequests: allPRs,
-	})
-
+	formatted, err := p.formatter.PrettyPrint(allPRs)
 
 	if err != nil {
 		return err

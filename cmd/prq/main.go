@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"github.com/knlambert/stale-pr-detector/pkg"
@@ -71,24 +71,6 @@ func Execute() {
 	}
 }
 
-//
-//func Execute() {
-//	pr, err := pkg.CreatePRDetector(
-//		git.GitClientVendorGithub,
-//		crawler.Parallel,
-//	)
-//
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//
-//	err = pr.StaleList(
-//		[]string{"github.com:knlambert/stale-pr-detector.git"},
-//		nil,
-//		"text",
-//	)
-//
-//	if err != nil {
-//		log.Fatalln(err)
-//	}
-//}
+func main() {
+	Execute()
+}

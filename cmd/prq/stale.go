@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"github.com/spf13/cobra"
@@ -10,7 +10,6 @@ var (
 	labels       []string
 )
 
-
 var cmdStale = &cobra.Command{
 	Use:   "stale --repositories github.com/knlambert/stale-pr-detector --last-activity 5d",
 	Short: "Command dedicated to find stale PRs",
@@ -21,7 +20,6 @@ var cmdStale = &cobra.Command{
 			repositoriesURLs,
 			labels,
 			lastActivity,
-			"text",
 		)
 
 		if err != nil {

@@ -7,7 +7,7 @@ import (
 )
 
 type Formatter interface {
-	PrettyPrint(value interface{}) ([]byte, error)
+	PrettyPrint(values interface{}) ([]byte, error)
 }
 
 type OutputFormat string
@@ -21,6 +21,8 @@ func CreateFormatter(f OutputFormat) (Formatter, error) {
 	switch f {
 	case OutputFormatJSON:
 		return format.CreateJSONFormatter(), nil
+	case OutputFormatText:
+		return format.CreateTextFormatter(), nil
 	default:
 		return nil, errors.New(fmt.Sprintf("format %s not supported", f))
 	}

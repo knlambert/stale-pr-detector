@@ -24,18 +24,14 @@ func (c *Client) PullRequestsList(
 		return nil, err
 	}
 
+	//Base filters
 	var queryFilters = []string{
 		"is:pr",
 		fmt.Sprintf("repo:%s/%s", owner, repo),
 	}
 
-	if filters.Labels != nil {
-		var labelsFilters []string
-		for _, label := range *filters.Labels {
-			labelsFilters = append(labelsFilters, fmt.Sprintf("label:%s", label))
-		}
-		queryFilters = append(queryFilters, strings.Join(labelsFilters, " "))
-	}
+	buildFilter("label", filters.Labels, &queryFilters)
+	buildFilter("state", filters.States, &queryFilters)
 
 	if filters.LastActivity != nil {
 		queryFilters = append(
@@ -68,6 +64,7 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 
 		number := strconv.Itoa(*pr.Number)
 
+		owner, repoName, _ := c.ParseRepositoryURL(*pr.RepositoryURL)
 		decoded = append(decoded, models.PullRequest{
 			Number:    &number,
 			State:     pr.State,
@@ -78,6 +75,8 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 			UpdatedAt: pr.UpdatedAt,
 			Repository: &models.Repository{
 				URL: pr.RepositoryURL,
+				Name: &repoName,
+				Owner: &owner,
 			},
 		})
 	}
