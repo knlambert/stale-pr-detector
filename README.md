@@ -1,11 +1,68 @@
+
+# PRQ
+
+PRQ stands for Pull Requests query.
+The command line only supports a stale feature, but it could be extended with more
+if required.
+
 # Usage
 
+## Build with Golang 1.17
+
 ```bash
-pstale \
-  --repository=git.com/knlambert/stale-pr-detector \
-  --format=csv \
-  --last-activity=2d \
-  --labels=Bug
+go build -o prq ./cmd/prq/*.go
+mv prq /usr/local/bin/prq
+```
+Or directly :
+```bash
+go run cmd/prq/*.go stale \
+  --repositories=https://github.com/kubernetes/kubernetes \
+  --last-activity=14d --format=text
 ```
 
-# stale-pr-detector
+To run the tests suite :
+
+```bash
+go test ./pkg/...
+```
+
+## Build with docker
+
+```bash
+docker build . -t prq
+docker run -t prq --help
+```
+
+To provide a github token :
+
+```bash
+docker run \
+  -e GITHUB_ACCESS_TOKEN=xxxx \
+  -t prq [...]
+```
+
+## Commands
+
+### help
+
+To get the list of commands and options :
+
+```bash
+prq --help
+```
+
+### stale
+
+The stale command is designed to extract PRs with no activity.
+
+All the PRs from one repository, using JSON format, with 14 days
+without any activity.
+All that with the label `size/XS`.
+```bash
+prq stale \
+  --labels="size/XS" \
+  --repositories=https://github.com/kubernetes/kubernetes \
+  --last-activity=14d \
+  --format=json | jq 
+```
+
