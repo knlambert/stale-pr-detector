@@ -3,6 +3,7 @@ module github.com/knlambert/stale-pr-detector
 go 1.13
 
 require (
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/go-github/v38 v38.1.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/errors v0.9.1

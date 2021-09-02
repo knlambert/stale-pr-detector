@@ -12,7 +12,11 @@ type suiteText struct {
 }
 
 func (s *suiteText) SetupTest() {
-	s.stubbedTextFormatter = &TextFormatter{}
+	s.stubbedTextFormatter = &TextFormatter{
+		headers: []string{
+			"email", "address.street", "address.town",
+		},
+	}
 }
 
 type someUserContainer struct {
@@ -36,9 +40,7 @@ func (s *suiteText) TestPrettyPrint() {
 			Street: "Tree street",
 			Town:   "Montreal",
 		},
-	}}, []string{
-		"email", "address.street", "address.town",
-	})
+	}})
 	assert.NoError(s.T(), err, "should not fail")
 	expected := `+--------------------+----------------+--------------+
 |       EMAIL        | ADDRESS STREET | ADDRESS TOWN |

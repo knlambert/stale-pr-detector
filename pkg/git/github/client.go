@@ -24,14 +24,22 @@ func CreateClient() *Client {
 		httpClient = oauth2.NewClient(ctx, ts)
 	}
 
+	client := github.NewClient(httpClient)
+
 	return &Client{
-		client: github.NewClient(httpClient),
+		search: client.Search,
 	}
 }
 
 //Client wrapper around a third party library to interact with Github.
 type Client struct {
-	client *github.Client
+	search goGithubSearch
+}
+
+type goGithubSearch interface {
+	Issues(ctx context.Context, query string, opts *github.SearchOptions) (
+		*github.IssuesSearchResult, *github.Response, error,
+	)
 }
 
 //ParseRepositoryURL takes a git repo URL and extracts its owner and repository.

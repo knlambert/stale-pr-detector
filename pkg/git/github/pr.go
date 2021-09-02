@@ -23,7 +23,6 @@ func (c *Client) PullRequestsList(
 	if err != nil {
 		return nil, err
 	}
-
 	//Base filters
 	var queryFilters = []string{
 		"is:pr",
@@ -40,8 +39,7 @@ func (c *Client) PullRequestsList(
 	}
 
 	query := strings.Join(queryFilters, " ")
-
-	if results, _, err := c.client.Search.Issues(context.Background(), query, &github.SearchOptions{
+	if results, _, err := c.search.Issues(context.Background(), query, &github.SearchOptions{
 		ListOptions: github.ListOptions{
 			PerPage: 100,
 		},

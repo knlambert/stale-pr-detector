@@ -1,6 +1,8 @@
 package github
 
 import (
+	"github.com/golang/mock/gomock"
+	github_mock "github.com/knlambert/stale-pr-detector/pkg/mock/github"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -8,11 +10,16 @@ import (
 
 type suiteClient struct {
 	suite.Suite
+	ctrl   *gomock.Controller
 	client *Client
 }
 
 func (s *suiteClient) SetupTest() {
-	s.client = &Client{}
+	s.ctrl = gomock.NewController(s.T())
+
+	s.client = &Client{
+		search: github_mock.NewMockgoGithubSearch(s.ctrl),
+	}
 }
 
 func (s *suiteClient) TestParseRepositoryURL() {
@@ -21,6 +28,7 @@ func (s *suiteClient) TestParseRepositoryURL() {
 		"git@github.com:google/go-github.git",
 		"github.com/google/go-github.git",
 		"github.com/google/go-github",
+		"https://api.github.com/repos/google/go-github",
 	} {
 		owner, repo, err := s.client.ParseRepositoryURL(url)
 		assert.Equal(s.T(), "google", owner)

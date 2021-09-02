@@ -22,11 +22,9 @@ func (s *suiteJSON) TestPrettyPrint() {
 			Street: "Tree street",
 			Town:   "Montreal",
 		},
-	}}, []string{
-		"email", "address.street", "address.town",
-	})
+	}})
 	assert.NoError(s.T(), err, "should not fail")
-	expected := `[{"address.street":"Tree street","address.town":"Montreal","email":"john.doe@gmail.com"}]`
+	expected := `[{"email":"john.doe@gmail.com","address":{"street":"Tree street","town":"Montreal"}}]`
 	assert.Equal(s.T(), string(result), expected)
 }
 
