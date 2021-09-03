@@ -33,7 +33,7 @@ func searchIssueSample(sample, startNumber, count int) []*github.Issue {
 				UpdatedAt:     &lastActivity,
 				RepositoryURL: github.String("https://github.com/google/go-github.git"),
 				Reactions:     nil,
-				HTMLURL: github.String("some-url"),
+				HTMLURL:       github.String("some-url"),
 			},
 			2: {
 				Number: github.Int(number),
@@ -49,7 +49,7 @@ func searchIssueSample(sample, startNumber, count int) []*github.Issue {
 				UpdatedAt:     &lastActivity,
 				RepositoryURL: github.String("https://github.com/google/go-github.git"),
 				Reactions:     nil,
-				HTMLURL: github.String("some-url"),
+				HTMLURL:       github.String("some-url"),
 			},
 		}[sample])
 	}

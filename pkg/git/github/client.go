@@ -31,7 +31,7 @@ func CreateClient() *Client {
 	return &Client{
 		search:          client.Search,
 		defaultPageSize: 100,
-		time:            std.CreateTime(),
+		time:            std.CreateTimeWrapper(),
 	}
 }
 
@@ -55,7 +55,7 @@ type goGithubSearch interface {
 	)
 }
 
-//parseRepositoryURL takes a git repo URL and extracts its owner and repository informations.
+//parseRepositoryURL takes a git repo URL and extracts its owner and repository information.
 func (c *Client) parseRepositoryURL(url string) (owner string, repo string, err error) {
 	var regex = regexp.MustCompile(`(?:git@|https?://)?[\w.@]+[/:]?(?:repos/)?(\S+)/([\w-]+)(?:\.git)?`)
 

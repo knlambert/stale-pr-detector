@@ -62,7 +62,7 @@ prq --help
 
 The stale command is designed to extract PRs with no activity.
 
-All the PRs from one repository, using JSON format, with 14 days without any activity. All that with the label `size/XS`
+All the PRs from one repository, using JSON format, with 14 days without any activity. All that with the label `stale`
 .
 
 ```bash

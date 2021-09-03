@@ -19,10 +19,6 @@ func (s *suiteText) SetupTest() {
 	}
 }
 
-type someUserContainer struct {
-	Users []someUser `json:"users"`
-}
-
 type someUser struct {
 	Email   string      `json:"email"`
 	Address someAddress `json:"address"`

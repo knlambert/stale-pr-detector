@@ -36,7 +36,7 @@ func CreatePRDetector(
 		formatter: formatter,
 		gitClient: gitClient,
 		output:    selectedOutput,
-		time:      std.CreateTime(),
+		time:      std.CreateTimeWrapper(),
 	}, nil
 }
 
@@ -45,5 +45,5 @@ type PRDetector struct {
 	formatter Formatter
 	gitClient GitClient
 	output io.Writer
-	time   timeWrapper
+	time   TimeWrapper
 }

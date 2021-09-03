@@ -2,20 +2,20 @@ package std
 
 import "time"
 
-//CreateTime creates a timeImpl instance.
-func CreateTime() *timeImpl {
-	return &timeImpl{}
+//CreateTimeWrapper creates a TimeWrapper instance.
+func CreateTimeWrapper() *TimeWrapper {
+	return &TimeWrapper{}
 }
 
-//timeImpl is a wrapper of the time standard package.
-type timeImpl struct{}
+//TimeWrapper is a wrapper of the time standard package.
+type TimeWrapper struct{}
 
 //Now returns the current time.
-func (t *timeImpl) Now() time.Time {
+func (t *TimeWrapper) Now() time.Time {
 	return time.Now()
 }
 
 //Sleep waits for a certain amount of time.
-func (t *timeImpl) Sleep(d time.Duration) {
+func (t *TimeWrapper) Sleep(d time.Duration) {
 	time.Sleep(d)
 }

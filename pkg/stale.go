@@ -50,7 +50,7 @@ func (p *PRDetector) StaleList(
 	return nil
 }
 
-//parseLastActivity converts a human friendly duration into a timeWrapper object.
+//parseLastActivity converts a human friendly duration into a TimeWrapper object.
 func (p *PRDetector) parseLastActivity(lastActivity string) (*time.Time, error) {
 	activityRegex := regexp.MustCompile(`(\d+)(d|y|m)`)
 

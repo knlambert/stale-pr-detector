@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 )
 
-//Create file creates a File instance.
+//CreateFile creates a File instance.
 func CreateFile(path string) *File {
 	return &File{
 		path: path,
