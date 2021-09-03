@@ -33,7 +33,7 @@ func staleInitialize() {
 		&lastActivity,
 		"last-activity",
 		"30d",
-		"The last activity limit, ex: 3d, 6m, 1y",
+		"The last activity limit, ex: 3d, 6m, 1y)",
 	)
 
 	cmdStale.PersistentFlags().StringSliceVar(

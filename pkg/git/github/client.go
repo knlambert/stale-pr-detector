@@ -27,13 +27,15 @@ func CreateClient() *Client {
 	client := github.NewClient(httpClient)
 
 	return &Client{
-		search: client.Search,
+		search:          client.Search,
+		defaultPageSize: 100,
 	}
 }
 
 //Client wrapper around a third party library to interact with Github.
 type Client struct {
-	search goGithubSearch
+	search          goGithubSearch
+	defaultPageSize int
 }
 
 type goGithubSearch interface {

@@ -46,7 +46,7 @@ func Execute() {
 		&gitVendor,
 		"vendor",
 		"github",
-		"The vendor to request (only github supported for now)",
+		"The vendor to request, with only github supported for now",
 	)
 
 	rootCmd.PersistentFlags().StringVar(

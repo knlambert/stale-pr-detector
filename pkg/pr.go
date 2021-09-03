@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"github.com/knlambert/stale-pr-detector/pkg/output"
+	"github.com/knlambert/stale-pr-detector/pkg/std"
 	"github.com/pkg/errors"
 	"io"
 	"os"
@@ -12,7 +13,7 @@ func CreatePRDetector(
 	formatType OutputFormat,
 	fileOutput string,
 ) (*PRDetector, error) {
-	var gitClient Client
+	var gitClient GitClient
 	var formatter Formatter
 	var err error
 
@@ -34,11 +35,13 @@ func CreatePRDetector(
 		formatter: formatter,
 		gitClient: gitClient,
 		output:    selectedOutput,
+		time:      std.CreateTime(),
 	}, nil
 }
 
 type PRDetector struct {
 	formatter Formatter
-	gitClient Client
+	gitClient GitClient
 	output    io.Writer
+	time      Time
 }

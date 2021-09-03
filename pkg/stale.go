@@ -60,7 +60,7 @@ func (p *PRDetector) parseLastActivity(lastActivity string) (*time.Time, error) 
 		return nil, err
 	}
 
-	now := time.Now()
+	now := p.time.Now()
 
 	lastActivityDate := map[string]time.Time{
 		"d": now.AddDate(0, 0, -count),
@@ -71,7 +71,3 @@ func (p *PRDetector) parseLastActivity(lastActivity string) (*time.Time, error) 
 	return &lastActivityDate, nil
 }
 
-//staleOutput represents the output of the command.
-type staleOutput struct {
-	PullRequests []models.PullRequest `json:"pull_requests"`
-}

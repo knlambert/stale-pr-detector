@@ -2,7 +2,7 @@ package github
 
 import (
 	"github.com/golang/mock/gomock"
-	github_mock "github.com/knlambert/stale-pr-detector/pkg/mock/github"
+	github_mock "github.com/knlambert/stale-pr-detector/pkg/mock/git/github"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -12,13 +12,17 @@ type suiteClient struct {
 	suite.Suite
 	ctrl   *gomock.Controller
 	client *Client
+	githubSearchMock *github_mock.MockgoGithubSearch
 }
 
 func (s *suiteClient) SetupTest() {
 	s.ctrl = gomock.NewController(s.T())
 
+	s.githubSearchMock = github_mock.NewMockgoGithubSearch(s.ctrl)
+
 	s.client = &Client{
-		search: github_mock.NewMockgoGithubSearch(s.ctrl),
+		search: s.githubSearchMock,
+		defaultPageSize: 5,
 	}
 }
 

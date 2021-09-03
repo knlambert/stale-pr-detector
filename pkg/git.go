@@ -14,14 +14,14 @@ const (
 	GitClientVendorGithub GitClientVendor = "github"
 )
 
-type Client interface {
+type GitClient interface {
 	PullRequestsList(
 		repositoryURL string,
 		filters *git.PullRequestsListFilters,
 	) ([]models.PullRequest, error)
 }
 
-func CreateGitClient(vendor GitClientVendor) (Client, error) {
+func CreateGitClient(vendor GitClientVendor) (GitClient, error) {
 	switch vendor {
 	case GitClientVendorGithub:
 		return github.CreateClient(), nil

@@ -17,7 +17,6 @@ func (c *Client) PullRequestsList(
 ) (
 	[]models.PullRequest, error,
 ) {
-	//TODO: Pagination
 	owner, repo, err := c.ParseRepositoryURL(repositoryURL)
 
 	if err != nil {
@@ -39,15 +38,27 @@ func (c *Client) PullRequestsList(
 	}
 
 	query := strings.Join(queryFilters, " ")
-	if results, _, err := c.search.Issues(context.Background(), query, &github.SearchOptions{
+	opts := &github.SearchOptions{
 		ListOptions: github.ListOptions{
-			PerPage: 100,
+			PerPage: c.defaultPageSize,
 		},
-	}); err == nil {
-		return c.issuesToPullRequests(results.Issues), nil
-	} else {
-		return nil, errors.Wrapf(err, "failed to list PRs for %s/%s", owner, repo)
 	}
+	var prs []models.PullRequest
+
+	for {
+		if results, response, err := c.search.Issues(context.Background(), query, opts); err == nil {
+			prs = append(prs, c.issuesToPullRequests(results.Issues)...)
+			//Next page = 0 when there is no more pages.
+			if response.NextPage == 0 {
+				break
+			}
+			opts.Page = response.NextPage
+		} else {
+			return nil, errors.Wrapf(err, "failed to list PRs for %s/%s", owner, repo)
+		}
+	}
+
+	return prs, nil
 }
 
 func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequest {
@@ -63,6 +74,7 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 		number := strconv.Itoa(*pr.Number)
 
 		owner, repoName, _ := c.ParseRepositoryURL(*pr.RepositoryURL)
+
 		decoded = append(decoded, models.PullRequest{
 			Number:    &number,
 			State:     pr.State,
@@ -72,8 +84,8 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 			CreatedAt: pr.CreatedAt,
 			UpdatedAt: pr.UpdatedAt,
 			Repository: &models.Repository{
-				URL: pr.RepositoryURL,
-				Name: &repoName,
+				URL:   pr.RepositoryURL,
+				Name:  &repoName,
 				Owner: &owner,
 			},
 		})
