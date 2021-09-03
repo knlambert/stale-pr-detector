@@ -50,6 +50,9 @@ docker run \
 
 ## Commands
 
+**Note:** For large requests, don't forget to set the github access token,
+or you could have rate limiting errors from the API.
+
 ### help
 
 To get the list of commands and options :
@@ -68,7 +71,13 @@ All the PRs from one repository, using JSON format, with 14 days without any act
 ```bash
 prq stale \
   --labels="size/XS" \
+  --authors=
   --repositories=https://github.com/kubernetes/kubernetes \
   --last-activity=14d \
   --format=json | jq 
 ```
+
+# Possible improvements
+
+* Better retry with an exponential backoff.
+* Better test coverage (errors, ...)

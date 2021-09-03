@@ -8,7 +8,8 @@ mockgen -destination=./pkg/mock/git.go \
 
 mockgen -destination=./pkg/mock/time.go \
   -package=pkg_mock \
-  -source=./pkg/time.go Time
+  -source=./pkg/time.go TimeWrapper
+
 
 mockgen -destination=./pkg/mock/formatter.go \
   -package=pkg_mock \
@@ -16,5 +17,4 @@ mockgen -destination=./pkg/mock/formatter.go \
 
 mockgen -destination=./pkg/mock/git/github/client.go \
   -package=github_mock \
-  -source=./pkg/git/github/client.go goGithubSearch
-
+  -source=./pkg/git/github/client.go goGithubSearch timeWrapper

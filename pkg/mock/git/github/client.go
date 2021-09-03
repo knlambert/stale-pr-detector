@@ -9,7 +9,43 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	github "github.com/google/go-github/v38/github"
 	reflect "reflect"
+	time "time"
 )
+
+// MocktimeWrapper is a mock of timeWrapper interface
+type MocktimeWrapper struct {
+	ctrl     *gomock.Controller
+	recorder *MocktimeWrapperMockRecorder
+}
+
+// MocktimeWrapperMockRecorder is the mock recorder for MocktimeWrapper
+type MocktimeWrapperMockRecorder struct {
+	mock *MocktimeWrapper
+}
+
+// NewMocktimeWrapper creates a new mock instance
+func NewMocktimeWrapper(ctrl *gomock.Controller) *MocktimeWrapper {
+	mock := &MocktimeWrapper{ctrl: ctrl}
+	mock.recorder = &MocktimeWrapperMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MocktimeWrapper) EXPECT() *MocktimeWrapperMockRecorder {
+	return m.recorder
+}
+
+// Sleep mocks base method
+func (m *MocktimeWrapper) Sleep(d time.Duration) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Sleep", d)
+}
+
+// Sleep indicates an expected call of Sleep
+func (mr *MocktimeWrapperMockRecorder) Sleep(d interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Sleep", reflect.TypeOf((*MocktimeWrapper)(nil).Sleep), d)
+}
 
 // MockgoGithubSearch is a mock of goGithubSearch interface
 type MockgoGithubSearch struct {

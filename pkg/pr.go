@@ -44,6 +44,6 @@ func CreatePRDetector(
 type PRDetector struct {
 	formatter Formatter
 	gitClient GitClient
-	output    io.Writer
-	time      Time
+	output io.Writer
+	time   timeWrapper
 }

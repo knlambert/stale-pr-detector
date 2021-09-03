@@ -14,3 +14,8 @@ type timeImpl struct{}
 func (t *timeImpl) Now() time.Time {
 	return time.Now()
 }
+
+//Sleep waits for a certain amount of time.
+func (t *timeImpl) Sleep(d time.Duration) {
+	time.Sleep(d)
+}

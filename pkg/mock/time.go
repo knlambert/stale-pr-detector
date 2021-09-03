@@ -10,31 +10,31 @@ import (
 	time "time"
 )
 
-// MockTime is a mock of Time interface
-type MockTime struct {
+// MocktimeWrapper is a mock of timeWrapper interface
+type MocktimeWrapper struct {
 	ctrl     *gomock.Controller
-	recorder *MockTimeMockRecorder
+	recorder *MocktimeWrapperMockRecorder
 }
 
-// MockTimeMockRecorder is the mock recorder for MockTime
-type MockTimeMockRecorder struct {
-	mock *MockTime
+// MocktimeWrapperMockRecorder is the mock recorder for MocktimeWrapper
+type MocktimeWrapperMockRecorder struct {
+	mock *MocktimeWrapper
 }
 
-// NewMockTime creates a new mock instance
-func NewMockTime(ctrl *gomock.Controller) *MockTime {
-	mock := &MockTime{ctrl: ctrl}
-	mock.recorder = &MockTimeMockRecorder{mock}
+// NewMocktimeWrapper creates a new mock instance
+func NewMocktimeWrapper(ctrl *gomock.Controller) *MocktimeWrapper {
+	mock := &MocktimeWrapper{ctrl: ctrl}
+	mock.recorder = &MocktimeWrapperMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockTime) EXPECT() *MockTimeMockRecorder {
+func (m *MocktimeWrapper) EXPECT() *MocktimeWrapperMockRecorder {
 	return m.recorder
 }
 
 // Now mocks base method
-func (m *MockTime) Now() time.Time {
+func (m *MocktimeWrapper) Now() time.Time {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Now")
 	ret0, _ := ret[0].(time.Time)
@@ -42,7 +42,7 @@ func (m *MockTime) Now() time.Time {
 }
 
 // Now indicates an expected call of Now
-func (mr *MockTimeMockRecorder) Now() *gomock.Call {
+func (mr *MocktimeWrapperMockRecorder) Now() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Now", reflect.TypeOf((*MockTime)(nil).Now))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Now", reflect.TypeOf((*MocktimeWrapper)(nil).Now))
 }

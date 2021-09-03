@@ -8,6 +8,7 @@ import (
 var (
 	lastActivity string
 	labels       []string
+	authors      []string
 )
 
 var cmdStale = &cobra.Command{
@@ -19,6 +20,7 @@ var cmdStale = &cobra.Command{
 		err := prDetector.StaleList(
 			repositoriesURLs,
 			labels,
+			authors,
 			lastActivity,
 		)
 
@@ -40,7 +42,14 @@ func staleInitialize() {
 		&labels,
 		"labels",
 		[]string{},
-		"A list of labels to filter on",
+		"A list of labels to filter with",
+	)
+
+	cmdStale.PersistentFlags().StringSliceVar(
+		&authors,
+		"authors",
+		[]string{},
+		"A list of authors to filter with",
 	)
 
 	rootCmd.AddCommand(cmdStale)

@@ -7,5 +7,5 @@ type PullRequestsListFilters struct {
 	LastActivity *time.Time
 	States       *[]string
 	Labels       *[]string
+	Authors      *[]string
 }
-

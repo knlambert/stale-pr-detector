@@ -15,7 +15,7 @@ func searchIssueSample(sample, startNumber, count int) []*github.Issue {
 	lastActivity := creationDate.AddDate(0, 0, 5)
 
 	var result []*github.Issue
-	for i := 0; i < count ; i++ {
+	for i := 0; i < count; i++ {
 		number := startNumber + i
 		result = append(result, map[int]*github.Issue{
 			1: {
@@ -33,6 +33,7 @@ func searchIssueSample(sample, startNumber, count int) []*github.Issue {
 				UpdatedAt:     &lastActivity,
 				RepositoryURL: github.String("https://github.com/google/go-github.git"),
 				Reactions:     nil,
+				HTMLURL: github.String("some-url"),
 			},
 			2: {
 				Number: github.Int(number),
@@ -48,6 +49,7 @@ func searchIssueSample(sample, startNumber, count int) []*github.Issue {
 				UpdatedAt:     &lastActivity,
 				RepositoryURL: github.String("https://github.com/google/go-github.git"),
 				Reactions:     nil,
+				HTMLURL: github.String("some-url"),
 			},
 		}[sample])
 	}
@@ -58,14 +60,16 @@ func (s *suiteClient) TestPullRequestListWithFilters() {
 	//Tear up
 	states := []string{"open"}
 	labels := []string{"stale", "high"}
+	authors := []string{"bstinson"}
 	creationDate := time.Date(2021, 01, 01, 0, 0, 0, 0, time.UTC)
 	lastActivity := creationDate.AddDate(0, 0, 5)
 	expectedIssues := searchIssueSample(1, 1, 1)
 
 	s.githubSearchMock.EXPECT().Issues(
 		context.Background(),
-		"is:pr repo:google/go-github label:stale label:high state:open updated:<=2021-01-06",
+		"is:pr repo:google/go-github author:bstinson label:stale label:high state:open updated:<=2021-01-06",
 		&github.SearchOptions{
+			Sort: "updated",
 			ListOptions: github.ListOptions{
 				PerPage: 5,
 			},
@@ -84,6 +88,7 @@ func (s *suiteClient) TestPullRequestListWithFilters() {
 			LastActivity: &lastActivity,
 			States:       &states,
 			Labels:       &labels,
+			Authors:      &authors,
 		},
 	)
 
@@ -101,6 +106,7 @@ func (s *suiteClient) TestPullRequestListWithFilters() {
 			Owner: github.String("google"),
 			Name:  github.String("go-github"),
 		},
+		Link: github.String("some-url"),
 	}})
 	s.ctrl.Finish()
 }
@@ -115,6 +121,7 @@ func (s *suiteClient) TestPullRequestListWithPagination() {
 		context.Background(),
 		"is:pr repo:google/go-github",
 		&github.SearchOptions{
+			Sort: "updated",
 			ListOptions: github.ListOptions{
 				PerPage: 5,
 			},
@@ -130,9 +137,10 @@ func (s *suiteClient) TestPullRequestListWithPagination() {
 		context.Background(),
 		"is:pr repo:google/go-github",
 		&github.SearchOptions{
+			Sort: "updated",
 			ListOptions: github.ListOptions{
 				PerPage: 5,
-				Page: 1,
+				Page:    1,
 			},
 		}).Return(
 		&github.IssuesSearchResult{
@@ -150,5 +158,55 @@ func (s *suiteClient) TestPullRequestListWithPagination() {
 
 	assert.NoError(s.T(), err, "should not raise errors")
 	assert.Equal(s.T(), 7, len(prs))
+	s.ctrl.Finish()
+}
+
+func (s *suiteClient) TestPullRequestListWithRetry() {
+	//Tear up
+
+	//First requests fails.
+	s.githubSearchMock.EXPECT().Issues(
+		context.Background(),
+		"is:pr repo:google/go-github",
+		&github.SearchOptions{
+			Sort: "updated",
+			ListOptions: github.ListOptions{
+				PerPage: 5,
+			},
+		}).Return(
+		&github.IssuesSearchResult{},
+		&github.Response{},
+		&github.RateLimitError{
+			Rate:     github.Rate{},
+			Response: nil,
+			Message:  "Some rate limit error",
+		})
+
+	s.time.EXPECT().Sleep(10 * time.Second).Times(1)
+
+	//Second works.
+	s.githubSearchMock.EXPECT().Issues(
+		context.Background(),
+		"is:pr repo:google/go-github",
+		&github.SearchOptions{
+			Sort: "updated",
+			ListOptions: github.ListOptions{
+				PerPage: 5,
+			},
+		}).Return(
+		&github.IssuesSearchResult{
+			Total:  github.Int(5),
+			Issues: searchIssueSample(1, 1, 1),
+		}, &github.Response{}, nil)
+
+	//Assertions
+	prs, err := s.client.PullRequestsList(
+		"https://github.com/google/go-github.git",
+		&git.PullRequestsListFilters{},
+	)
+
+	assert.NoError(s.T(), err, "should not raise errors")
+	assert.Equal(s.T(), 1, len(prs))
+
 	s.ctrl.Finish()
 }

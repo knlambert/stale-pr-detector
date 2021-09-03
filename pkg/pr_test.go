@@ -17,7 +17,7 @@ type suitePRDetector struct {
 	formatterMock     *pkg_mock.MockFormatter
 	gitClientMock     *pkg_mock.MockGitClient
 	output            io.Writer
-	timeMock          *pkg_mock.MockTime
+	timeMock          *pkg_mock.MocktimeWrapper
 
 	now time.Time
 }
@@ -27,7 +27,7 @@ func (s *suitePRDetector) SetupTest() {
 
 	s.formatterMock = pkg_mock.NewMockFormatter(s.ctrl)
 	s.gitClientMock = pkg_mock.NewMockGitClient(s.ctrl)
-	s.timeMock = pkg_mock.NewMockTime(s.ctrl)
+	s.timeMock = pkg_mock.NewMocktimeWrapper(s.ctrl)
 
 	s.now = time.Now()
 	s.timeMock.EXPECT().Now().Return(s.now).AnyTimes()

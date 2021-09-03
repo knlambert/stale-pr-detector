@@ -33,6 +33,7 @@ func (s *suitePRDetector) TestStaleListTestBase() {
 	//Tear up
 	states := []string{"open"}
 	labels := []string{"high"}
+	authors := []string{"bstinson"}
 	lastActivity := s.now.AddDate(0, 0, -30)
 
 	number := "1"
@@ -43,6 +44,7 @@ func (s *suitePRDetector) TestStaleListTestBase() {
 			States:       &states,
 			Labels:       &labels,
 			LastActivity: &lastActivity,
+			Authors: &authors,
 		}).Return(result, nil)
 
 	s.formatterMock.EXPECT().PrettyPrint(result).Times(1).Return(
@@ -53,6 +55,7 @@ func (s *suitePRDetector) TestStaleListTestBase() {
 	err := s.stubbedPRDetector.StaleList(
 		[]string{"https://github.com/kubernetes/kubernetes"},
 		[]string{"high"},
+		[]string{"bstinson"},
 		"30d",
 	)
 

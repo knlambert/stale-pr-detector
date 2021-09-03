@@ -2,7 +2,7 @@ package pkg
 
 import "time"
 
-//Time describes a wrapper around the time package.
-type Time interface {
+//timeWrapper describes a wrapper around the time package.
+type timeWrapper interface {
 	Now() time.Time
 }

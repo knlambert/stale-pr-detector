@@ -18,7 +18,7 @@ func (c *Client) PullRequestsList(
 ) (
 	[]models.PullRequest, error,
 ) {
-	owner, repo, err := c.ParseRepositoryURL(repositoryURL)
+	owner, repo, err := c.parseRepositoryURL(repositoryURL)
 
 	if err != nil {
 		return nil, err
@@ -29,6 +29,7 @@ func (c *Client) PullRequestsList(
 		fmt.Sprintf("repo:%s/%s", owner, repo),
 	}
 
+	buildFilter("author", filters.Authors, &queryFilters)
 	buildFilter("label", filters.Labels, &queryFilters)
 	buildFilter("state", filters.States, &queryFilters)
 
@@ -40,6 +41,7 @@ func (c *Client) PullRequestsList(
 
 	query := strings.Join(queryFilters, " ")
 	opts := &github.SearchOptions{
+		Sort: "updated",
 		ListOptions: github.ListOptions{
 			PerPage: c.defaultPageSize,
 		},
@@ -55,6 +57,10 @@ func (c *Client) PullRequestsList(
 			}
 			opts.Page = response.NextPage
 		} else {
+			//Rate limit errors can happen. Wait and retry.
+			if retry := c.waitIfRateLimitError(err); retry {
+				continue
+			}
 			return nil, errors.Wrapf(err, "failed to list PRs for %s/%s", owner, repo)
 		}
 	}
@@ -75,7 +81,7 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 
 		number := strconv.Itoa(*pr.Number)
 
-		owner, repoName, _ := c.ParseRepositoryURL(*pr.RepositoryURL)
+		owner, repoName, _ := c.parseRepositoryURL(*pr.RepositoryURL)
 
 		decoded = append(decoded, models.PullRequest{
 			Number:    &number,
@@ -90,6 +96,7 @@ func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequ
 				Name:  &repoName,
 				Owner: &owner,
 			},
+			Link: pr.HTMLURL,
 		})
 	}
 

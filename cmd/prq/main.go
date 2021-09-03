@@ -51,7 +51,7 @@ func execute() {
 	rootCmd.PersistentFlags().StringVar(
 		&formatType,
 		"format",
-		"json",
+		"text",
 		"The required output format (json|text)",
 	)
 
@@ -62,6 +62,8 @@ func execute() {
 		"",
 		"The file to output the result to",
 	)
+
+	_ = rootCmd.MarkPersistentFlagRequired("repositories")
 
 	staleInitialize()
 

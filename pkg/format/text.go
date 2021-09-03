@@ -11,7 +11,7 @@ import (
 func CreateTextFormatter() *TextFormatter {
 	return &TextFormatter{
 		headers: []string{
-			"number", "title", "author", "labels", "created_at", "updated_at", "repository.owner", "repository.name",
+			"number", "title", "author", "labels", "created_at", "updated_at", "repository.owner", "repository.name", "link",
 		},
 	}
 }
@@ -66,7 +66,7 @@ func (t *TextFormatter) toTable(
 			case []interface{}:
 				line = append(line, strings.Join(sliceInterfaceToString(v), ", "))
 			default:
-				panic("unsupported case")
+				line = append(line, "")
 			}
 
 		}

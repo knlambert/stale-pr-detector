@@ -9,6 +9,7 @@ type PullRequest struct {
 	Title      *string     `json:"title"`
 	Author     *string     `json:"author"`
 	Labels     []string    `json:"labels"`
+	Link       *string     `json:"link"`
 	CreatedAt  *time.Time  `json:"created_at"`
 	UpdatedAt  *time.Time  `json:"updated_at"`
 	Repository *Repository `json:"repository" `
