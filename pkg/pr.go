@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+//CreatePRDetector creates a PRDetector instance depending on the required vendor, format, and eventually file path.
 func CreatePRDetector(
 	gitVendor GitClientVendor,
 	formatType OutputFormat,
@@ -39,6 +40,7 @@ func CreatePRDetector(
 	}, nil
 }
 
+//PRDetector is the entrypoint of the program, containing all the high level methods.
 type PRDetector struct {
 	formatter Formatter
 	gitClient GitClient

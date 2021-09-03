@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+//PullRequest describes a pull Requests extracted from a git vendor.
 type PullRequest struct {
 	Number     *string     `json:"number"`
 	State      *string     `json:"state"`

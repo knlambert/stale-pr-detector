@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+//buildFilter is a helper function to extend a list of filters.
 func buildFilter(
 	parameter string,
 	values *[]string,

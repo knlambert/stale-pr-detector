@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//StaleList is dedicated to returning pull requests which are without interactions for a certain amount of time.
 func (p *PRDetector) StaleList(repositories []string, labels []string, lastActivity string) error {
 	convertedLastActivity, err := p.parseLastActivity(lastActivity)
 	states := []string{"open"}
@@ -45,6 +46,7 @@ func (p *PRDetector) StaleList(repositories []string, labels []string, lastActiv
 	return nil
 }
 
+//parseLastActivity converts a human friendly duration into a Time object.
 func (p *PRDetector) parseLastActivity(lastActivity string) (*time.Time, error) {
 	activityRegex := regexp.MustCompile(`(\d+)(d|y|m)`)
 

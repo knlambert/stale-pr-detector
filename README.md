@@ -39,7 +39,8 @@ docker build . -t prq
 docker run -t prq --help
 ```
 
-To provide a github token :
+To provide a github token, use the `GITHUB_ACCESS_TOKEN` env var.
+For example with docker:
 
 ```bash
 docker run \

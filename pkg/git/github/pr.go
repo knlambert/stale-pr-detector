@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+//PullRequestsList lists pull requests from Github.
 func (c *Client) PullRequestsList(
 	repositoryURL string,
 	filters *git.PullRequestsListFilters,
@@ -61,6 +62,7 @@ func (c *Client) PullRequestsList(
 	return prs, nil
 }
 
+//issuesToPullRequests converts github pull requests structs into an equivalent domain object.
 func (c *Client) issuesToPullRequests(results []*github.Issue) []models.PullRequest {
 
 	var decoded = make([]models.PullRequest, 0)

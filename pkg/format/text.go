@@ -2,7 +2,6 @@ package format
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pkg/errors"
 	"strings"
@@ -17,7 +16,7 @@ func CreateTextFormatter() *TextFormatter {
 	}
 }
 
-//TextFormatter implements methods to format into text.
+//TextFormatter implements method to pretty print golang objects into text.
 type TextFormatter struct {
 	headers []string
 }
@@ -48,6 +47,7 @@ func (t *TextFormatter) PrettyPrint(
 	return t.toTable(flat)
 }
 
+//toTable converts a list of map into a 2 dimensions table.
 func (t *TextFormatter) toTable(
 	items []map[string]interface{},
 ) ([]byte, error) {
@@ -65,9 +65,8 @@ func (t *TextFormatter) toTable(
 				line = append(line, v)
 			case []interface{}:
 				line = append(line, strings.Join(sliceInterfaceToString(v), ", "))
-
 			default:
-				fmt.Println(v)
+				panic("unsupported case")
 			}
 
 		}
@@ -80,6 +79,7 @@ func (t *TextFormatter) toTable(
 	return []byte(tableString.String()), nil
 }
 
+//sliceInterfaceToString converts a list of interfaces to a list of strings.
 func sliceInterfaceToString(s []interface{}) []string {
 	var result []string
 

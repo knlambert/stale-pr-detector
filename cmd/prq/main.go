@@ -33,8 +33,7 @@ func createPRDetector() *pkg.PRDetector {
 	return prDetector
 }
 
-func Execute() {
-
+func execute() {
 	rootCmd.PersistentFlags().StringSliceVar(
 		&repositoriesURLs,
 		"repositories",
@@ -72,5 +71,5 @@ func Execute() {
 }
 
 func main() {
-	Execute()
+	execute()
 }

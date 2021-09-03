@@ -38,13 +38,15 @@ type Client struct {
 	defaultPageSize int
 }
 
+//goGithubSearch describes the external go-github search API.
+// https://pkg.go.dev/github.com/google/go-github/v38/github#SearchService
 type goGithubSearch interface {
 	Issues(ctx context.Context, query string, opts *github.SearchOptions) (
 		*github.IssuesSearchResult, *github.Response, error,
 	)
 }
 
-//ParseRepositoryURL takes a git repo URL and extracts its owner and repository.
+//ParseRepositoryURL takes a git repo URL and extracts its owner and repository informations.
 func (c *Client) ParseRepositoryURL(url string) (owner string, repo string, err error) {
 	var regex = regexp.MustCompile(`(?:git@|https?://)?[\w.@]+[/:]?(?:repos/)?(\S+)/([\w-]+)(?:\.git)?`)
 
