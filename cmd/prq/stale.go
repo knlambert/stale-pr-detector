@@ -6,13 +6,13 @@ import (
 )
 
 var (
-	lastActivity string
-	labels       []string
+	noActivitySince string
+	labels          []string
 	authors      []string
 )
 
 var cmdStale = &cobra.Command{
-	Use:   "stale --repositories github.com/knlambert/stale-pr-detector --last-activity 5d",
+	Use:   "stale --repositories github.com/knlambert/stale-pr-detector --no-activity-since 5d",
 	Short: "Command dedicated to find stale PRs",
 	Run: func(cmd *cobra.Command, args []string) {
 		prDetector := createPRDetector()
@@ -21,7 +21,7 @@ var cmdStale = &cobra.Command{
 			repositoriesURLs,
 			labels,
 			authors,
-			lastActivity,
+			noActivitySince,
 		)
 
 		if err != nil {
@@ -32,10 +32,10 @@ var cmdStale = &cobra.Command{
 
 func staleInitialize() {
 	cmdStale.PersistentFlags().StringVar(
-		&lastActivity,
-		"last-activity",
+		&noActivitySince,
+		"no-activity-since",
 		"30d",
-		"The last activity limit, ex: 3d, 6m, 1y)",
+		"The minimal amount of time without any activity, ex: 3d, 6m, 1y)",
 	)
 
 	cmdStale.PersistentFlags().StringSliceVar(

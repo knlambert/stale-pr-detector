@@ -1,6 +1,6 @@
 # PRQ
 
-PRQ stands for Pull Requests query. The command line only supports a stale feature, but it could be extended with more
+PRQ stands for Pull Requests Query. The command line only supports a stale feature, but it could be extended with more
 if required.
 
 # Usage
@@ -16,8 +16,8 @@ Or directly :
 
 ```bash
 go run cmd/prq/*.go stale \
-  --repositories=https://github.com/kubernetes/kubernetes \
-  --last-activity=14d --format=text
+  --repositories=https://github.com/emissary-ingress/emissary \
+  --no-activity-since=14d --format=text
 ```
 
 To run the test suite :
@@ -50,9 +50,6 @@ docker run \
 
 ## Commands
 
-**Note:** For large requests, don't forget to set the github access token,
-or you could have rate limiting errors from the API.
-
 ### help
 
 To get the list of commands and options :
@@ -70,14 +67,16 @@ All the PRs from one repository, using JSON format, with 14 days without any act
 
 ```bash
 prq stale \
-  --labels="size/XS" \
-  --authors=
-  --repositories=https://github.com/kubernetes/kubernetes \
-  --last-activity=14d \
-  --format=json | jq 
+  --labels="stale" \
+  --repositories=https://github.com/emissary-ingress/emissary \
+  --no-activity-since=14d \
+  --format=json | jq
 ```
 
 # Possible improvements
 
 * Better retry with an exponential backoff.
-* Better test coverage (errors, ...)
+* Better test coverage (errors, ...).
+* More git vendors.
+* Other commands than stale for other use cases.
+* Multi-thread crawling for better performance.
